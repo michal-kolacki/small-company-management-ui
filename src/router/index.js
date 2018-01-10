@@ -1,21 +1,27 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import VueRouter from 'vue-router';
 import Home from '@/components/Home';
 import Projects from '@/components/Projects';
+import Tasks from '@/components/Tasks';
 
-Vue.use(Router);
+Vue.use(VueRouter);
 
-export default new Router({
+export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: Home,
     },
     {
       path: '/projects',
-      name: 'Projects',
+      name: 'projects',
       component: Projects,
+    },
+    {
+      path: '/projects/:id/tasks',
+      name: 'tasks',
+      component: Tasks,
     },
   ],
 });
