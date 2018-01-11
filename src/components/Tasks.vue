@@ -35,21 +35,39 @@
                 <hr />
             </form>
 
+
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Number</th>
                         <th>Name</th>
                         <th>State</th>
-                        <th>Logs</th>
+                        <th width="50">Logs</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="task in tasks">
+                <tbody v-for="task in tasks">
+                    <tr>
                         <td>{{project.code}}-{{task.number}}</td>
                         <td>{{task.name}}</td>
                         <td>{{getState(task.task_state_id)}}</td>
-                        <td>TODO LOGS</td>
+                        <td>
+                            <button class="btn btn-xs btn-info"
+                                    v-show="!task.showLogs"
+                                    @click="task.showLogs = true">
+                                <i class="glyphicon glyphicon-folder-open"></i>
+                            </button>
+
+                            <button class="btn btn-xs btn-warning"
+                                    v-show="task.showLogs"
+                                    @click="task.showLogs = false">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr v-if="task.showLogs">
+                        <td colspan="4">
+                            <task-logs-list :task-id="task.id"></task-logs-list>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -59,9 +77,11 @@
 
 <script>
 import axios from 'axios';
+import TaskLogsList from './TaskLogsList';
 
 export default {
   name: 'Tasks',
+  components: { TaskLogsList },
   data() {
     return {
       createTaskForm: false,
@@ -69,6 +89,7 @@ export default {
       project: {},
       states: [],
       tasks: [],
+      openedTaskLogs: {},
       task: {
         name: '',
         content: '',
@@ -91,14 +112,19 @@ export default {
         });
     },
     getState(taskStateId) {
-      return this.states.filter(state => state.id === taskStateId)[0].name;
+      const state = this.states.filter(st => st.id === taskStateId);
+      return state && state[0] && state[0].name;
     },
   },
   created() {
     // get tasks list
     axios.get(`${this.$config.API}/projects/${this.$route.params.id}/tasks`)
       .then((results) => {
-        this.tasks = results.data;
+        this.tasks = results.data.map((task) => {
+          const nTask = task;
+          nTask.showLogs = false;
+          return nTask;
+        });
       });
 
     // get project details
