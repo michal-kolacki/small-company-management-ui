@@ -41,13 +41,14 @@
                     <tr v-for="pr in projects">
                         <td>{{pr.name}}</td>
                         <td>
-                            <router-link :to="{ name: 'tasks', params: { id: pr.id} }" class="btn btn-default btn-xs">
+                            <router-link :to="{ name: 'tasks', params: { id: pr.id} }"
+                                         class="btn btn-default btn-xs">
                                 <i class="glyphicon glyphicon-list"></i>
                             </router-link>
                         </td>
                         <td>
                             <button @click="deleteProject(pr.id)"
-                                    class="btn btn-xs">
+                                    class="btn btn-default btn-xs">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </button>
                         </td>
@@ -97,8 +98,11 @@ export default {
           this.message = error.response.data.message;
         });
     },
+    updateProject() {
+      // TODO:
+    },
     deleteProject(id) {
-      if (confirm('Do you really want to delete this project?')) {
+      if (confirm('Do you really want to delete this project?')) { // TODO: change confirm to smthg else
         axios.delete(`${this.$config.API}/projects/${id}`)
           .then(() => {
             this.projects = this.projects.filter(pr => pr.id !== id);
