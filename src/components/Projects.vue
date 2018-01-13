@@ -1,9 +1,5 @@
 <template>
     <div>
-        <b-alert dismissible
-                 :show="message.length"
-                 @dismissed="message = ''">{{message}}</b-alert>
-
         <h1>
             Projects
             <button @click="createProjectForm = true"
@@ -19,6 +15,11 @@
             </div>
 
             <div class="form-group">
+                <label>Project code:</label>
+                <input v-model="project.code" type="text" class="form-control" />
+            </div>
+
+            <div class="form-group">
                 <label>Client:</label>
                 <input v-model="project.client_id" type="text" class="form-control" />
             </div>
@@ -28,34 +29,32 @@
             <hr />
         </form>
 
-        <div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th width="50">Tasks</th>
-                        <th width="50">Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="pr in projects">
-                        <td>{{pr.name}}</td>
-                        <td>
-                            <router-link :to="{ name: 'tasks', params: { id: pr.id} }"
-                                         class="btn btn-default btn-xs">
-                                <i class="glyphicon glyphicon-list"></i>
-                            </router-link>
-                        </td>
-                        <td>
-                            <button @click="deleteProject(pr.id)"
-                                    class="btn btn-default btn-xs">
-                                <i class="glyphicon glyphicon-remove"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th width="50">Tasks</th>
+                    <th width="50">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="pr in projects">
+                    <td>{{pr.name}}</td>
+                    <td>
+                        <router-link :to="{ name: 'tasks', params: { id: pr.id} }"
+                                     class="btn btn-default btn-xs">
+                            <i class="glyphicon glyphicon-list"></i>
+                        </router-link>
+                    </td>
+                    <td>
+                        <button @click="deleteProject(pr.id)"
+                                class="btn btn-default btn-xs">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -71,7 +70,8 @@ export default {
       projects: [],
       project: {
         name: '',
-        client_id: '',
+        code: '',
+        client_id: 0,
       },
     };
   },
@@ -102,15 +102,13 @@ export default {
       // TODO:
     },
     deleteProject(id) {
-      if (confirm('Do you really want to delete this project?')) { // TODO: change confirm to smthg else
-        axios.delete(`${this.$config.API}/projects/${id}`)
-          .then(() => {
-            this.projects = this.projects.filter(pr => pr.id !== id);
-          })
-          .catch((error) => {
-            this.message = error.response.data.message;
-          });
-      }
+      axios.delete(`${this.$config.API}/projects/${id}`)
+        .then(() => {
+          this.projects = this.projects.filter(pr => pr.id !== id);
+        })
+        .catch((error) => {
+          this.message = error.response.data.message;
+        });
     },
   },
   created() {

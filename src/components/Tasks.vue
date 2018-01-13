@@ -1,14 +1,15 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-md-12">
-            <b-alert dismissible
-                     :show="message.length"
-                     @dismissed="message = ''">{{message}}</b-alert>
+            <router-link :to="{ name: 'projects' }">
+                <i class="glyphicon glyphicon-arrow-left"></i> Back to projects
+            </router-link>
 
             <h1>
                 Tasks for {{project.name}}
                 <button @click="createTaskForm = true"
                         v-show="!createTaskForm"
+                        type="button"
                         class="btn btn-primary">Create task</button>
             </h1>
 
@@ -30,8 +31,11 @@
                     </select>
                 </div>
                 <input type="submit" value="Create" class="btn btn-md btn-primary" />
-                <input type="button" value="Cancel" class="btn btn-md btn-warning"
-                       @click="createTaskForm = false" />
+                <button type="button"
+                        class="btn btn-md btn-warning"
+                        @click="createTaskForm = false">
+                    Cancel
+                </button>
                 <hr />
             </form>
 
@@ -52,12 +56,14 @@
                         <td>{{getState(task.task_state_id)}}</td>
                         <td>
                             <button class="btn btn-xs btn-info"
+                                    type="button"
                                     v-show="!task.showLogs"
                                     @click="task.showLogs = true">
                                 <i class="glyphicon glyphicon-folder-open"></i>
                             </button>
 
                             <button class="btn btn-xs btn-warning"
+                                    type="button"
                                     v-show="task.showLogs"
                                     @click="task.showLogs = false">
                                 <i class="glyphicon glyphicon-remove"></i>
@@ -102,7 +108,11 @@ export default {
       this.task.project_id = parseInt(this.$route.params.id, 10);
       axios.post(`${this.$config.API}/tasks`, this.task)
         .then((results) => {
-          this.tasks.push(results.data);
+          if (results && results.data) {
+            const newlyCreatedTask = results.data;
+            newlyCreatedTask.showLogs = false;
+            this.tasks.push(newlyCreatedTask);
+          }
           this.createTaskForm = false;
           this.task = {};
           this.message = 'Task has been created.'; // TODO: modify it to have separated component
