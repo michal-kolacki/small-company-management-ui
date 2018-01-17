@@ -20,7 +20,8 @@
         <span v-show="!logs.length && !loading">No logs found.</span>
         <span v-show="loading">Loading...</span>
 
-        <task-log-create-form :task-id="taskId"></task-log-create-form>
+        <task-log-create-form :task-id="taskId"
+                              @created-task-log="updateLogs"></task-log-create-form>
     </div>
 </template>
 
@@ -40,9 +41,7 @@ export default {
   },
   computed: {
     timeSummed() {
-      return this.logs.reduce((prev, curr) => {
-        return { time: prev.time + curr.time };
-      });
+      return this.logs.reduce((prev, curr) => ({ time: prev.time + curr.time }));
     },
   },
   methods: {
@@ -55,6 +54,9 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    updateLogs(newTaskLog) {
+      this.logs.push(newTaskLog);
     },
     formatTime(seconds) { // TODO: move to mixin
       let tmpTime = seconds;

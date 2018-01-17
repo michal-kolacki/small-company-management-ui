@@ -63,11 +63,13 @@ export default {
   },
   methods: {
     createTaskLog(taskId) {
+      this.stopTimer();
       this.taskLog.task_id = parseInt(taskId, 10);
       axios.post(`${this.$config.API}/tasklogs`, this.taskLog)
-        .then(() => {
-          alert('ok'); // TODO: modify to proper message
-          // TODO: push taskLog to the list using event
+        .then((taskLog) => {
+          // TODO: add message component to display ok message
+          this.taskLog = { time: 0 };
+          this.$emit('created-task-log', taskLog.data);
         });
     },
     startTimer() {
