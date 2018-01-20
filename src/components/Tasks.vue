@@ -13,6 +13,8 @@
                         class="btn btn-primary">Create task</button>
             </h1>
 
+            <span class="label label-info">Total time spent on project: <strong>{{formatTime(project.time)}}</strong></span>
+
             <form v-if="createTaskForm" @submit.prevent="createTask">
                 <div class="form-group">
                     <label>Task name:</label>
@@ -124,6 +126,19 @@ export default {
     getState(taskStateId) {
       const state = this.states.filter(st => st.id === taskStateId);
       return state && state[0] && state[0].name;
+    },
+    formatTime(seconds) { // TODO: move to mixin
+      let tmpTime = seconds;
+      let h = parseInt(tmpTime / 60 / 60, 10);
+      tmpTime -= h * 60 * 60;
+      let m = parseInt(tmpTime / 60, 10);
+      let s = tmpTime - (m * 60);
+
+      h = h < 10 ? `0${h}` : h;
+      m = m < 10 ? `0${m}` : m;
+      s = s < 10 ? `0${s}` : s;
+
+      return `${h}:${m}:${s}`;
     },
   },
   created() {
