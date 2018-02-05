@@ -74,7 +74,7 @@ export default {
     },
     startTimer() {
       this.timer = setInterval(() => {
-        this.taskLog.time += 1;
+        this.taskLog.time = parseInt(this.taskLog.time, 10) + 1;
       }, 1000);
     },
     stopTimer() {
@@ -83,19 +83,6 @@ export default {
     },
     putTime(minutes) {
       this.taskLog.time = minutes * 60;
-    },
-    formatTime(seconds) { // TODO: move to mixin
-      let tmpTime = seconds;
-      let h = parseInt(tmpTime / 60 / 60, 10);
-      tmpTime -= h * 60 * 60;
-      let m = parseInt(tmpTime / 60, 10);
-      let s = tmpTime - (m * 60);
-
-      h = h < 10 ? `0${h}` : h;
-      m = m < 10 ? `0${m}` : m;
-      s = s < 10 ? `0${s}` : s;
-
-      return `${h}:${m}:${s}`;
     },
   },
 };

@@ -4,15 +4,18 @@
             <thead>
                 <th>Log comment</th>
                 <th>Time spent</th>
+                <th>Created</th>
             </thead>
             <tbody>
                 <tr v-for="log in logs">
                     <td v-html="log.comment"></td>
                     <td width="100">{{formatTime(log.time)}}</td>
+                    <td width="100" v-html="getDateTime(log.created)"></td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td><strong>{{formatTime(timeSummed.time)}}</strong></td>
+                    <td>&nbsp;</td>
                 </tr>
             </tbody>
         </table>
@@ -58,18 +61,12 @@ export default {
     updateLogs(newTaskLog) {
       this.logs.push(newTaskLog);
     },
-    formatTime(seconds) { // TODO: move to mixin
-      let tmpTime = seconds;
-      let h = parseInt(tmpTime / 60 / 60, 10);
-      tmpTime -= h * 60 * 60;
-      let m = parseInt(tmpTime / 60, 10);
-      let s = tmpTime - (m * 60);
-
-      h = h < 10 ? `0${h}` : h;
-      m = m < 10 ? `0${m}` : m;
-      s = s < 10 ? `0${s}` : s;
-
-      return `${h}:${m}:${s}`;
+    getDateTime(created) {
+      let datetime = '';
+      const createdSplit = created.split('T');
+      datetime += createdSplit[0];
+      datetime += `<br />${createdSplit[1].split('+')[0]}`;
+      return datetime;
     },
   },
   created() {
