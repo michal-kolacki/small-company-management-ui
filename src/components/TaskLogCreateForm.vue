@@ -57,6 +57,8 @@ export default {
         { time: 60, label: '60 min' },
         { time: 90, label: '1.5 hrs' },
         { time: 120, label: '2 hrs' },
+        { time: 150, label: '2.5 hrs' },
+        { time: 180, label: '3 hrs' },
         { time: 0, label: 'clear' },
       ],
     };
