@@ -4,7 +4,7 @@
             <thead>
                 <th>Log comment</th>
                 <th>Time spent</th>
-                <th>Created</th>
+                <th class="text-center">Created</th>
             </thead>
             <tbody>
                 <tr v-for="log in logs">
@@ -20,22 +20,17 @@
             </tbody>
         </table>
 
-        <span v-show="!logs.length && !loading">No logs found.</span>
+        <div v-show="!logs.length && !loading" class="alert alert-info">No logs found.</div>
         <span v-show="loading">Loading...</span>
-
-        <task-log-create-form :task-id="taskId"
-                              @created-task-log="updateLogs"></task-log-create-form>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import TaskLogCreateForm from './TaskLogCreateForm';
 
 export default {
   name: 'TaskLogsList',
   props: ['taskId'],
-  components: { TaskLogCreateForm },
   data() {
     return {
       loading: false,

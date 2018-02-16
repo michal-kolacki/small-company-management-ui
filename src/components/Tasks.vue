@@ -48,66 +48,25 @@
                         <th>Number</th>
                         <th>Name</th>
                         <th>State</th>
-                        <th width="70">&nbsp;</th>
+                        <th width="50">&nbsp;</th>
                     </tr>
                 </thead>
-                <tbody v-for="task in tasks">
-                    <tr>
+                <tbody>
+                    <tr v-for="task in tasks">
                         <td>
-                            <span  v-show="!task.editMode">{{project.code}}-{{task.number}}</span>
-                            <input type="text"
-                                   class="form-control"
-                                   v-model="task.number"
-                                   v-show="task.editMode" />
+                            {{project.code}}-{{task.number}}
                         </td>
                         <td>
-                            <span  v-show="!task.editMode">{{task.name}}</span>
-                            <input type="text"
-                                   class="form-control"
-                                   v-model="task.name"
-                                   v-show="task.editMode" />
+                            {{task.name}}
                         </td>
                         <td>
-                            <span  v-show="!task.editMode">{{getState(task.task_state_id)}}</span>
-                            <select v-model="task.task_state_id"
-                                    v-show="task.editMode"
-                                    type="text" class="form-control">
-                                <option v-for="state in states" :value="state.id">{{state.name}}</option>
-                            </select>
+                            {{getState(task.task_state_id)}}
                         </td>
-                        <td>
-                            <button class="btn btn-xs btn-default"
-                                    type="button"
-                                    v-show="!task.showLogs"
-                                    @click="task.showLogs = true">
-                                <i class="glyphicon glyphicon-folder-open"></i>
-                            </button>
-
-                            <button class="btn btn-xs btn-default"
-                                    type="button"
-                                    v-show="task.showLogs"
-                                    @click="task.showLogs = false">
-                                <i class="glyphicon glyphicon-remove"></i>
-                            </button>
-
-                            <button class="btn btn-xs btn-default"
-                                    type="button"
-                                    v-show="!task.editMode"
-                                    @click="task.editMode = true">
-                                <i class="glyphicon glyphicon-pencil"></i>
-                            </button>
-
-                            <button class="btn btn-xs btn-default"
-                                    type="button"
-                                    v-show="task.editMode"
-                                    @click="task = updateTask(task)">
-                                <i class="glyphicon glyphicon-floppy-save"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr v-if="task.showLogs">
-                        <td colspan="4">
-                            <task-logs-list :task-id="task.id"></task-logs-list>
+                        <td class="text-center">
+                            <router-link :to="{ name: 'taskLogs', params: { tid: task.id} }"
+                                         class="btn btn-default btn-xs">
+                                <i class="glyphicon glyphicon-list"></i>
+                            </router-link>
                         </td>
                     </tr>
                 </tbody>
@@ -118,11 +77,9 @@
 
 <script>
 import axios from 'axios';
-import TaskLogsList from './TaskLogsList';
 
 export default {
   name: 'Tasks',
-  components: { TaskLogsList },
   data() {
     return {
       createTaskForm: false,
@@ -156,20 +113,6 @@ export default {
         .catch((error) => {
           this.message = error.response.data.message;
         });
-    },
-    updateTask(task) {
-      const taskItem = task;
-      const taskData = {
-        id: taskItem.id,
-        task_state_id: taskItem.task_state_id,
-        number: taskItem.number,
-        name: taskItem.name,
-      };
-      axios.put(`${this.$config.API}/tasks/${task.id}`, taskData)
-        .then(() => {
-          taskItem.editMode = false;
-        });
-      return taskItem;
     },
     getState(taskStateId) {
       const state = this.states.filter(st => st.id === taskStateId);

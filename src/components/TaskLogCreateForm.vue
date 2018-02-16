@@ -18,6 +18,9 @@
             </div>
 
             <div class="col-sm-12 buttons">
+                <button type="submit"
+                        class="btn btn-md btn-warning pull-right">Cancel</button>
+
                 <input type="submit" value="Create"
                        class="btn btn-md btn-primary pull-right" />
 
