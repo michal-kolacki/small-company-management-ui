@@ -10,7 +10,7 @@
                 <button @click="createTaskForm = true"
                         v-show="!createTaskForm"
                         type="button"
-                        class="btn btn-primary">Create task</button>
+                        class="btn btn-primary btn-sm">Create task</button>
             </h1>
 
             <span class="label label-info">Total time spent on project: <strong>{{formatTime(project.time)}}</strong></span>

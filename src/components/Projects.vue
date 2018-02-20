@@ -4,7 +4,7 @@
             Projects
             <button @click="createProjectForm = true"
                     v-show="!createProjectForm"
-                    class="btn btn-primary">Create project</button>
+                    class="btn btn-primary btn-sm">Create project</button>
         </h1>
 
 

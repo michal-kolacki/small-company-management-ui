@@ -1,6 +1,6 @@
 <template>
-    <form @submit.prevent="createTaskLog(taskId)">
-        <div class="row">
+    <div class="row task-log-create-form">
+        <form @submit.prevent="createTaskLog(taskId)">
             <div class="form-group col-sm-6">
                 <label>Time (sec): {{formatTime(taskLog.time)}}</label>
                 <input v-model="taskLog.time" type="text" class="form-control margin-bottom-5" />
@@ -18,9 +18,6 @@
             </div>
 
             <div class="col-sm-12 buttons">
-                <button type="submit"
-                        class="btn btn-md btn-warning pull-right">Cancel</button>
-
                 <input type="submit" value="Create"
                        class="btn btn-md btn-primary pull-right" />
 
@@ -38,8 +35,8 @@
                     <i class="glyphicon glyphicon-time"></i> Stop timer
                 </button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </template>
 
 <script>
@@ -94,6 +91,10 @@ export default {
 </script>
 
 <style>
+.task-log-create-form {
+    margin-bottom: 20px;
+}
+
 .margin-bottom-5 {
     margin-bottom: 5px;
 }
