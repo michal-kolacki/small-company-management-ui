@@ -5,6 +5,10 @@
                 <i class="glyphicon glyphicon-arrow-left"></i> Back to projects
             </router-link>
 
+            <div class="alert alert-info" v-if="message.length">
+                {{message}}
+            </div>
+
             <h1>
                 Tasks for {{project.name}}
                 <button @click="createTaskForm = true"
@@ -129,6 +133,9 @@ export default {
           nTask.editMode = false;
           return nTask;
         });
+      })
+      .catch((error) => {
+        this.message = error;
       });
 
     // get project details

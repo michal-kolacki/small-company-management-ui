@@ -6,8 +6,12 @@
                 <i class="glyphicon glyphicon-arrow-left"></i> Back to tasks list
             </router-link>
 
+            <div class="alert alert-info" v-if="message.length">
+                {{message}}
+            </div>
+
             <h1>
-                {{task.name}}
+                [{{task.number}}] {{task.name}}
                 <button @click="editMode = true"
                         v-show="!editMode"
                         type="button"
@@ -74,6 +78,7 @@ export default {
   components: { TaskLogsList, TaskLogCreateForm },
   data() {
     return {
+      message: '',
       editMode: false,
       createTaskLogForm: false,
       task: {},
@@ -101,26 +106,48 @@ export default {
       axios.put(`${this.$config.API}/tasks/${task.id}`, taskData)
         .then(() => {
           this.editMode = false;
+        })
+        .catch((error) => {
+          this.message = error;
         });
       return taskItem;
     },
+    nl2br(str, isXhtml = true) {
+      const breakTag = (isXhtml || typeof isXhtml === 'undefined') ? '<br />' : '<br>';
+      return str.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+    },
   },
   created() {
+    // axios.interceptors.response.use(
+    //   (test) => { console.log(test); },
+    //   (testt) => { console.log(testt); },
+    // );
+
     // get project details
     axios.get(`${this.$config.API}/tasks/${this.$route.params.tid}`)
       .then((task) => {
         this.task = task.data;
+        this.task.content = this.nl2br(this.task.content);
+      })
+      .catch((error) => {
+        this.message = error;
       });
 
     axios.get(`${this.$config.API}/tasks/${this.$route.params.tid}/logs`)
       .then((results) => {
         this.logs = results.data;
+      })
+      .catch((error) => {
+        this.message = error;
       });
 
     // get task states
     axios.get(`${this.$config.API}/taskstates`)
       .then((states) => {
         this.states = states.data;
+      })
+      .catch((error) => {
+        this.message = error;
       });
   },
 };
